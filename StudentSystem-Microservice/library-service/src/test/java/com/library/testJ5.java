@@ -60,11 +60,14 @@ public class testJ5 {
         when(bookRepository.save(any(BookEntity.class))).thenAnswer(new Answer<BookEntity>() {
             @Override
             public BookEntity answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return null;
+                BookEntity bookEntity = new BookEntity();
+                bookEntity.setAuthor(bookRequest.getAuthor());
+                bookEntity.setName(bookRequest.getName());
+                return bookEntity;
             }
-
             BookEntity bookEntity = new BookEntity();
-
         });
     }
+
+
 }

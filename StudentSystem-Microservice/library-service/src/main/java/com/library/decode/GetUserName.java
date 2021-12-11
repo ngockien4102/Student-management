@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GetUserName {
-    public static String  getUsername(String token){
+    public String  getUsername(String token){
         DecodedJWT jwt = JWT.decode(token);
         String username = String.valueOf(jwt.getClaim("sub")).replace("\""," ").trim();
         return username;

@@ -5,6 +5,7 @@ import com.library.decode.CheckRoleService;
 import com.library.decode.GetUserName;
 import com.library.dto.Enum.BookStatus;
 import com.library.dto.Request.BookRegisterRequest;
+import com.library.dto.Response.BookResponse;
 import com.library.dto.Response.ExceptionResponse;
 import com.library.entity.BookEntity;
 import com.library.entity.BookManagementEntity;
@@ -55,11 +56,17 @@ public class BookManagementService implements IBookManagement {
         if (bookManagement.getQuantity() > 0) {
             BookEntity book = new BookEntity();
             book.setId(bookId);
-            BookManagementEntity bookManagementEntity = new BookManagementEntity();
-            bookManagementEntity.setStatus(String.valueOf(BookStatus.REGISTER));
-            bookManagementEntity.setUsername(username);
-            bookManagementEntity.setBookEntity(book);
-            bookmanagementRepository.save(bookManagementEntity);
+            BookManagementEntity bookManagementEntity = bookmanagementRepository.findByUsernameAndBookEntity_Id(username, bookId);
+            if (bookManagementEntity != null) {
+                bookManagementEntity.setStatus(BookStatus.REGISTER.toString());
+                bookmanagementRepository.save(bookManagementEntity);
+            } else {
+                BookManagementEntity bookManagementEntityNew = new BookManagementEntity();
+                bookManagementEntityNew.setStatus(String.valueOf(BookStatus.REGISTER));
+                bookManagementEntityNew.setUsername(username);
+                bookManagementEntityNew.setBookEntity(book);
+                bookmanagementRepository.save(bookManagementEntityNew);
+            }
 //            logger.info("===== finish =====");
         } else {
             logger.error("book quantity was exhausted");
@@ -74,10 +81,10 @@ public class BookManagementService implements IBookManagement {
             String name = bookRegisterRequest.getUsername();
             for (Long id : bookRegisterRequest.getBookId()) {
                 BookEntity bookEntity = iBook.getBookById(id);
-                if (bookEntity != null && checkExist(name, id, "REGISTER") ) {
-                    if(checkExist(name, id, "BORROW")){
+                if (bookEntity != null && checkExist(name, id, "REGISTER")) {
+                    if (checkExist(name, id, "BORROW")) {
                         register(name, id);
-                    }else {
+                    } else {
                         throw new RegisterBookException(new ExceptionResponse(ErrorCode.registerBook));
                     }
                 } else {
@@ -103,7 +110,7 @@ public class BookManagementService implements IBookManagement {
                 BookManagementEntity bookManagementEntity = bookmanagementRepository.findByUsernameAndBookEntity_Id(name, bookId);
                 if (bookManagementEntity != null && bookManagementEntity.getStatus().equals("REGISTER")) {
                     bookManagementEntity.setStatus(String.valueOf(BookStatus.BORROW));
-                    updateQuantity(bookId,BookStatus.BORROW);
+                    updateQuantity(bookId, BookStatus.BORROW);
                     bookmanagementRepository.save(bookManagementEntity);
                 } else {
                     logger.error("this book don't register borrow");
@@ -139,7 +146,7 @@ public class BookManagementService implements IBookManagement {
         if (checkRoleService.checkRole(token)) {
             String name = bookRegisterRequest.getUsername();
             for (Long id : bookRegisterRequest.getBookId()) {
-                updateQuantity(id,BookStatus.RETURN);
+                updateQuantity(id, BookStatus.RETURN);
                 returnBook(name, id);
             }
             logger.info("===== finish return book =====");
@@ -153,9 +160,13 @@ public class BookManagementService implements IBookManagement {
     private void unRegister(String username, Long bookId) throws BadRequestException {
         logger.info("Receive studentCode {}, bookId {} to unregister", username, bookId);
         BookManagementEntity bookManagement = bookmanagementRepository.findByUsernameAndBookEntity_Id(username, bookId);
+        if (bookManagement.getStatus().equals("REGISTER")) {
+            bookManagement.setStatus(String.valueOf(BookStatus.UNREGISTER));
+            bookmanagementRepository.save(bookManagement);
+        } else {
+            throw new UnregisterException(new ExceptionResponse(ErrorCode.unregisterBook));
+        }
 
-        bookManagement.setStatus(String.valueOf(BookStatus.UNREGISTER));
-        bookmanagementRepository.save(bookManagement);
 //        logger.info("===== finish  =====");
     }
 
@@ -169,8 +180,7 @@ public class BookManagementService implements IBookManagement {
                 if (bookEntity != null && checkExist(name, id, "UNREGISTER")) {
                     unRegister(name, id);
                 } else {
-                    logger.error("this request is duplicate");
-                    throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
+                    throw new DuplicateException(new ExceptionResponse(ErrorCode.DuplicateRequest));
                 }
             }
         } else {
@@ -182,9 +192,47 @@ public class BookManagementService implements IBookManagement {
     }
 
     @Override
-    public List<String> getBorrowBook(String username) throws ForbiddenException {
-        List<String> bookBorrow = bookmanagementRepository.getBookBorrow(username);
-        return bookBorrow;
+    public List<BookResponse> getBorrowBook(String token, String status) throws ForbiddenException {
+        String username = getName.getUsername(token);
+        List<BookEntity> bookBorrows = bookmanagementRepository.getBookByStatus(username, status);
+        List<BookResponse> bookDatas = new ArrayList<>();
+        for (BookEntity book : bookBorrows) {
+            BookResponse bookResponse = new BookResponse();
+            bookResponse.setId(book.getId());
+            bookResponse.setName(book.getName());
+            bookResponse.setAuthor(book.getAuthor());
+            bookResponse.setDescription(book.getDescription());
+            bookResponse.setPageNumber(book.getPageNumber());
+            bookResponse.setPublishDate(book.getPublishDate());
+            bookResponse.setImage(book.getImage());
+            bookResponse.setCategory(book.getCategory());
+            bookResponse.setQuantity(book.getQuantity());
+            bookResponse.setBookStatus(book.getBookStatus());
+            bookDatas.add(bookResponse);
+        }
+        return bookDatas;
+    }
+
+    @Override
+    public List<BookResponse> getRegisterBook(String token, String status) {
+        String username = getName.getUsername(token);
+        List<BookEntity> bookRegister = bookmanagementRepository.getBookByStatus(username, status);
+        List<BookResponse> bookDatas = new ArrayList<>();
+        for (BookEntity book : bookRegister) {
+            BookResponse bookResponse = new BookResponse();
+            bookResponse.setId(book.getId());
+            bookResponse.setName(book.getName());
+            bookResponse.setAuthor(book.getAuthor());
+            bookResponse.setDescription(book.getDescription());
+            bookResponse.setPageNumber(book.getPageNumber());
+            bookResponse.setPublishDate(book.getPublishDate());
+            bookResponse.setImage(book.getImage());
+            bookResponse.setCategory(book.getCategory());
+            bookResponse.setQuantity(book.getQuantity());
+            bookResponse.setBookStatus(book.getBookStatus());
+            bookDatas.add(bookResponse);
+        }
+        return bookDatas;
     }
 
     @Override
@@ -200,15 +248,15 @@ public class BookManagementService implements IBookManagement {
         }
     }
 
-    public void updateQuantity(Long bookId, BookStatus bookStatus) {
+    private void updateQuantity(Long bookId, BookStatus bookStatus) {
         BookEntity bookEntity = bookRepository.findById(bookId).orElseThrow(() -> new BadRequestException(new ExceptionResponse(ErrorCode.notFound)));
         int quantity = bookEntity.getQuantity();
         if (bookStatus.equals(BookStatus.BORROW)) {
-            bookEntity.setQuantity(quantity-1);
-        } else if(bookStatus.equals(BookStatus.RETURN)){
-            bookEntity.setQuantity(quantity+1);
+            bookEntity.setQuantity(quantity - 1);
+        } else if (bookStatus.equals(BookStatus.RETURN)) {
+            bookEntity.setQuantity(quantity + 1);
         }
 
-            bookRepository.save(bookEntity);
+        bookRepository.save(bookEntity);
     }
 }

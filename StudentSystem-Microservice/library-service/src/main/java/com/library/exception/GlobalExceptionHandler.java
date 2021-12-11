@@ -33,12 +33,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RegisterBookException.class)
-    public ResponseEntity<Object> handleDuplicateException(RegisterBookException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    public ResponseEntity<Object> handleRegisterBookException(RegisterBookException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(BorowBookException.class)
-    public ResponseEntity<Object> handleDuplicateException(BorowBookException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    public ResponseEntity<Object> handleBorowBookException(BorowBookException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UnregisterException.class)
+    public ResponseEntity<Object> handleUnregisterException(UnregisterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.FORBIDDEN);
     }
 

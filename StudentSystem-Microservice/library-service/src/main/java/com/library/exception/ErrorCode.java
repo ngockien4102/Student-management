@@ -7,7 +7,7 @@ public class ErrorCode {
     public final static int DuplicateRequest = notFound + 3;
     public final static int registerBook = notFound + 4;
     public final static int borowBook = notFound + 5;
-
+    public final static int unregisterBook = notFound + 6;
 
     public static String getErrorMessage(int code) {
         switch (code) {
@@ -25,6 +25,8 @@ public class ErrorCode {
                 return "please return book before when you want to borrow";
             case borowBook:
                 return "please register before borrow book";
+            case unregisterBook:
+                return "this user can't register because don't register before";
         }
         return "";
     }

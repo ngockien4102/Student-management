@@ -19,7 +19,7 @@ public class BookManagementEntity {
     @Column(name = "status")
     private String status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "book_id",referencedColumnName = "id")
     private BookEntity bookEntity;
 }

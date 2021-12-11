@@ -1,12 +1,15 @@
 package com.library.entity;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -45,6 +48,7 @@ public class BookEntity {
     @Column(name = "bookstatus")
     private String bookStatus;
 
-    @OneToOne(mappedBy = "bookEntity")
-    private BookManagementEntity bookManagementEntity;
+
+    @OneToMany(mappedBy = "bookEntity",fetch = FetchType.LAZY)
+    private List<BookManagementEntity> bookManagementEntities;
 }

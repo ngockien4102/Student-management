@@ -98,7 +98,6 @@ public class BookService implements IBook {
             logger.error("this user don't have Permision to delete book");
             throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
         }
-
     }
 
     @Override
