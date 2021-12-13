@@ -29,7 +29,7 @@ public class StudentEntity {
     private String name;
 
     @Column(name="gender")
-    private boolean gender;
+    private String gender;
 
     @Column(name="date_birth")
     private Date dob;
@@ -40,11 +40,4 @@ public class StudentEntity {
     @Column(name = "user_name")
     private String userName;
 
-    public boolean isGender() {
-        return gender;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
-    }
 }

@@ -13,11 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class StudentRequest {
-
-    @NotNull
-    private long id;
+public class InsertRequest {
 
     @NotNull
     private String rollNumber;

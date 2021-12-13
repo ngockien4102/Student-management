@@ -1,6 +1,8 @@
 package com.student.service;
 
+import com.student.dto.Request.InsertRequest;
 import com.student.dto.Request.StudentRequest;
+import com.student.dto.Response.StudentResponse;
 import com.student.entity.StudentEntity;
 
 import java.util.List;
@@ -8,15 +10,15 @@ import java.util.Optional;
 
 
 public interface IStudentService {
-    StudentEntity getStudentById(long id,String token);
+    StudentResponse getStudentById(long id, String token);
 
     StudentRequest updateStudent(StudentRequest studentDto,String token);
 
-    StudentRequest insertStudent(StudentRequest studentDto,String token);
+    InsertRequest insertStudent(InsertRequest insertRequest, String token);
 
-    List<StudentRequest> getListStudent();
+    List<StudentRequest> getListStudent(String token);
 
-    String checkgraduateCondition(String rollnumber,String token);
+    String checkgraduateCondition(String token);
 
-    List<String> getBookBorrow(String username, String token);
+    List<String> getBookBorrow( String token);
 }

@@ -1,7 +1,9 @@
 package com.student.controller;
 
+import com.student.dto.Request.InsertRequest;
 import com.student.dto.Request.StudentRequest;
 import com.student.dto.Response.ExceptionResponse;
+import com.student.dto.Response.StudentResponse;
 import com.student.entity.StudentEntity;
 import com.student.exception.BadRequestException;
 import com.student.exception.ForbiddenException;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 public class StudentController {
     @Autowired
     IStudentService iStudentService;
@@ -27,8 +30,9 @@ public class StudentController {
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @PostMapping(value = "/int/students")
-    public StudentRequest insertStudent(@Valid @RequestBody StudentRequest studentDto, @RequestHeader("AUTHORIZATION") String token) {
-        return iStudentService.insertStudent(studentDto, token);
+    @CrossOrigin
+    public InsertRequest insertStudent(@Valid @RequestBody InsertRequest insertRequest, @RequestHeader("AUTHORIZATION") String token) {
+        return iStudentService.insertStudent(insertRequest, token);
     }
 
     //API get all student
@@ -38,8 +42,9 @@ public class StudentController {
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @GetMapping(value = "ext/students")
-    public List<StudentRequest> getListStudent() {
-        return iStudentService.getListStudent();
+    @CrossOrigin
+    public List<StudentRequest> getListStudent(@RequestHeader("AUTHORIZATION")String token) {
+        return iStudentService.getListStudent(token);
     }
 
 
@@ -50,7 +55,8 @@ public class StudentController {
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @GetMapping(value = "/ext/students/{id}")
-    public StudentEntity getStudentById(@Valid @PathVariable(name = "id") Long id, @RequestHeader("AUTHORIZATION") String token) {
+    @CrossOrigin
+    public StudentResponse getStudentById(@Valid @PathVariable(name = "id") Long id, @RequestHeader("AUTHORIZATION") String token) {
         return iStudentService.getStudentById(id, token);
     }
 
@@ -62,6 +68,7 @@ public class StudentController {
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @PutMapping(value = "/int/students/{id}")
+    @CrossOrigin
     public StudentRequest updateStudent(@Valid @RequestBody StudentRequest studentDto, @RequestHeader("AUTHORIZATION") String token) {
         return iStudentService.updateStudent(studentDto, token);
     }
@@ -71,9 +78,10 @@ public class StudentController {
             @ApiResponse(code = 401, message = "Unauthorization", response = ExceptionResponse.class),
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
-    @GetMapping(value = "/int/student/checkgraduate/{username}")
-    public String checkStudentCondition(@PathVariable("username") String username,@RequestHeader("AUTHORIZATION") String token) {
-        return iStudentService.checkgraduateCondition(username,token);
+    @GetMapping(value = "/int/student/checkgraduate")
+    @CrossOrigin
+    public String checkStudentCondition(@RequestHeader("AUTHORIZATION") String token) {
+        return iStudentService.checkgraduateCondition(token);
     }
 
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Add success", response = List.class),
@@ -82,8 +90,9 @@ public class StudentController {
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @GetMapping(value = "/int/student/getBookBorrow/{username}")
-    public List<String> getBookBorrow(@PathVariable("username") String username,@RequestHeader("AUTHORIZATION") String token){
-        List<String> bookBorrow = iStudentService.getBookBorrow(username,token);
+    @CrossOrigin
+    public List<String> getBookBorrow(@RequestHeader("AUTHORIZATION") String token){
+        List<String> bookBorrow = iStudentService.getBookBorrow(token);
         return bookBorrow;
     }
 }
