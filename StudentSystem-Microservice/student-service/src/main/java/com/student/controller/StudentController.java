@@ -43,7 +43,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @GetMapping(value = "ext/students")
     @CrossOrigin
-    public List<StudentRequest> getListStudent(@RequestHeader("AUTHORIZATION")String token) {
+    public List<StudentResponse> getListStudent(@RequestHeader("AUTHORIZATION")String token) {
         return iStudentService.getListStudent(token);
     }
 

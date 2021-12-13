@@ -16,7 +16,7 @@ public interface IStudentService {
 
     InsertRequest insertStudent(InsertRequest insertRequest, String token);
 
-    List<StudentRequest> getListStudent(String token);
+    List<StudentResponse> getListStudent(String token);
 
     String checkgraduateCondition(String token);
 

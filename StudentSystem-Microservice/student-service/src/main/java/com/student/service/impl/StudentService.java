@@ -109,13 +109,21 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public List<StudentRequest> getListStudent(String token) {
+    public List<StudentResponse> getListStudent(String token) {
         if (checkRoleService.checkRole(token)) {
             List<StudentEntity> listStudent = studentRepository.findAll();
-            List<StudentRequest> studentRequestList = new ArrayList<>();
-//            for (:) {
-//
-//            }
+            List<StudentResponse> studentRequestList = new ArrayList<>();
+            for (StudentEntity student: listStudent) {
+                StudentResponse studentResponse = new StudentResponse();
+                studentResponse.setId(student.getId());
+                studentResponse.setRollNumber(student.getRollNumber());
+                studentResponse.setName(student.getName());
+                studentResponse.setGender(student.getGender());
+                studentResponse.setDob(student.getDob());
+                studentResponse.setStatus(student.getStatus());
+                studentResponse.setUserName(student.getUserName());
+                studentRequestList.add(studentResponse);
+            }
             return  studentRequestList;
         } else {
             throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
