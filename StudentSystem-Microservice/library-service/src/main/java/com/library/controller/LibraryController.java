@@ -160,6 +160,34 @@ public class LibraryController {
         return bookBorrows;
     }
 
+    //API to get book borrow for student service
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success", response = List.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = BadRequestException.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
+            @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)
+    })
+    @GetMapping("int/book/getBorrowBookForStudentService/{username}")
+    @CrossOrigin
+    public List<String> getBookBorrowForStudentService(@PathVariable("username") String username){
+        List<String> bookBorrows = iBookManagement.getBookBorrowForStudentService(username);
+        return bookBorrows;
+    }
+
+//    //API get book borrow by username
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "success", response = List.class),
+//            @ApiResponse(code = 400, message = "Bad Request", response = BadRequestException.class),
+//            @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
+//            @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)
+//    })
+//    @GetMapping("int/book/getBorrowBook/{username}")
+//    @CrossOrigin
+//    public List<BookResponse> getBookBorrowForStudentService(@PathVariable("username") String username){
+//        List<BookResponse> bookBorrows = iBookManagement.getBookBorrowForStudentService(username);
+//        return bookBorrows;
+//    }
+
     //API to get book register of user
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success", response = List.class),
@@ -173,5 +201,17 @@ public class LibraryController {
         List<BookResponse> bookBorrow = iBookManagement.getRegisterBook(token, BookStatus.REGISTER.toString());
         return bookBorrow;
     }
+
+
+
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "success", response = List.class),
+//            @ApiResponse(code = 400, message = "Bad Request", response = BadRequestException.class),
+//            @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
+//            @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)
+//    })
+//    public List<BookResponse> getListStudentByStatus(String username){
+//        return iBookManagement.
+//    }
 
 }

@@ -14,8 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -60,7 +65,6 @@ public class StudentController {
         return iStudentService.getStudentById(id, token);
     }
 
-
     // API update student
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Add success", response = StudentRequest.class),
             @ApiResponse(code = 400, message = "Bad Request", response = BadRequestException.class),
@@ -89,10 +93,20 @@ public class StudentController {
             @ApiResponse(code = 401, message = "Unauthorization", response = ExceptionResponse.class),
             @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
-    @GetMapping(value = "/int/student/getBookBorrow/{username}")
+    @GetMapping(value = "/int/student/getBookBorrow")
     @CrossOrigin
-    public List<String> getBookBorrow(@RequestHeader("AUTHORIZATION") String token){
-        List<String> bookBorrow = iStudentService.getBookBorrow(token);
+    public String getBookBorrow(@RequestHeader("AUTHORIZATION") String token){
+        String bookBorrow = iStudentService.getBookBorrow(token);
         return bookBorrow;
     }
+
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Add success", response = List.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = BadRequestException.class),
+            @ApiResponse(code = 401, message = "Unauthorization", response = ExceptionResponse.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = ForbiddenException.class),
+            @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
+    public List<StudentResponse> getListGraduate(@RequestHeader("AUTHORIZATION") String token){
+        return iStudentService.getListGraduateStudent(token);
+    }
+
 }

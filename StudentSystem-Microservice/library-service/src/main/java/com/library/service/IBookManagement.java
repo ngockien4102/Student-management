@@ -21,4 +21,6 @@ public interface IBookManagement {
     List<BookResponse> getBorrowBook(String token,String status);
 
     List<BookResponse> getRegisterBook(String token,String status);
+
+    List<String> getBookBorrowForStudentService(String username);
 }

@@ -113,7 +113,7 @@ public class StudentService implements IStudentService {
         if (checkRoleService.checkRole(token)) {
             List<StudentEntity> listStudent = studentRepository.findAll();
             List<StudentResponse> studentRequestList = new ArrayList<>();
-            for (StudentEntity student: listStudent) {
+            for (StudentEntity student : listStudent) {
                 StudentResponse studentResponse = new StudentResponse();
                 studentResponse.setId(student.getId());
                 studentResponse.setRollNumber(student.getRollNumber());
@@ -124,7 +124,7 @@ public class StudentService implements IStudentService {
                 studentResponse.setUserName(student.getUserName());
                 studentRequestList.add(studentResponse);
             }
-            return  studentRequestList;
+            return studentRequestList;
         } else {
             throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
         }
@@ -135,7 +135,7 @@ public class StudentService implements IStudentService {
         String username = getUserName.getUsername(token);
         logger.info("===== receive student username {}, token to check graduate =====", username);
         if (checkRoleService.checkRole(token)) {
-            List<String> bookBorrow = restTemplate.getBookBorrow(username);
+            List<String> bookBorrow = restTemplate.getBookBorrow(token);
             if (bookBorrow == null) {
                 return "this student can graduate";
             } else {
@@ -148,14 +148,29 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public List<String> getBookBorrow(String token) throws ForbiddenException {
+    public String getBookBorrow(String token) throws ForbiddenException {
         String username = getUserName.getUsername(token);
+        StudentEntity studentEntity= studentRepository.findByUserName(username);
         logger.info("===== receive student username {}, token to get book borrow =====", username);
         if (checkRoleService.checkRole(token)) {
             List<String> bookBorrow = restTemplate.getBookBorrow(username);
-            return bookBorrow;
+            return "Name: "+username+ " RollNumber: "+ studentEntity.getRollNumber()+" Book Borrow: "+bookBorrow.toString();
         } else {
             logger.error("this user don't have Permision to get");
+            throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
+        }
+    }
+
+    @Override
+    public List<StudentResponse> getListGraduateStudent(String token) {
+        return null;
+    }
+
+    public List<StudentResponse> getListGraduateStudent(String token,String status) {
+        if (checkRoleService.checkRole(token)) {
+            List<StudentResponse> studentResponses = new ArrayList<>();
+            return studentResponses;
+        } else {
             throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));
         }
     }
@@ -169,5 +184,14 @@ public class StudentService implements IStudentService {
         }
     }
 
+    private boolean checkgraduateByUsername(String username,String token) throws ForbiddenException {
+        logger.info("===== receive student username {}, token to check graduate =====", username);
+        List<String> bookBorrow = restTemplate.getBookBorrow(token);
+        if (bookBorrow == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

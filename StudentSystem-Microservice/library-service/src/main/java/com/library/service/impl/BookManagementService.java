@@ -213,6 +213,7 @@ public class BookManagementService implements IBookManagement {
         return bookDatas;
     }
 
+
     @Override
     public List<BookResponse> getRegisterBook(String token, String status) {
         String username = getName.getUsername(token);
@@ -233,6 +234,12 @@ public class BookManagementService implements IBookManagement {
             bookDatas.add(bookResponse);
         }
         return bookDatas;
+    }
+
+    @Override
+    public List<String> getBookBorrowForStudentService(String username) {
+        List<String> bookBorrows = bookmanagementRepository.getBookNameByUser(username);
+        return bookBorrows;
     }
 
     @Override

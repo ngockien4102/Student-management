@@ -288,6 +288,10 @@ public interface BookmanagementRepository extends JpaRepository<BookManagementEn
             +"WHERE be.status= :status AND be.username = :name")
     List<BookEntity> getBookByStatus(@Param("name") String username,@Param("status") String status);
 
+    @Query("SELECT b.name FROM BookEntity b INNER JOIN BookManagementEntity be ON be.bookEntity.id = b.id "
+            +"WHERE be.status= 'REGISTER' AND be.username = :name")
+    List<String> getBookNameByUser(@Param("name") String username);
+
 //    @Query("SELECT b FROM BookEntity b INNER JOIN BookManagementEntity be ON be.bookEntity.id = b.id "
 //            +"WHERE be.status='REGISTER' AND be.username = :name")
 //    List<BookEntity> getBookRegister(@Param("name") String username);

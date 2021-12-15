@@ -1,5 +1,6 @@
 package com.student.restTemplate;
 
+import com.student.Token.GetUserName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,10 @@ public class RestTemplateService {
     @Value("${service.library.api.host}")
     private String libraryServiceHost;
 
-    private final String url_book_id = "/int/book/getBorrowBook/{username}";
+    private final String subpass = "/int/book/getBorrowBookForStudentService/{username}";
+
+    @Autowired
+    GetUserName getUserName;
 
     @Autowired
     org.springframework.web.client.RestTemplate restTemplate;
@@ -37,7 +41,7 @@ public class RestTemplateService {
         Map<String, String> params = new HashMap<>();
         params.put("username", userName);
 
-        List<String> book = restTemplate.getForObject(uriBuilder.toUriString() + url_book_id, List.class, params);
+        List<String> book = restTemplate.getForObject(uriBuilder.toUriString() + subpass, List.class,params);
         return book;
     }
 }
