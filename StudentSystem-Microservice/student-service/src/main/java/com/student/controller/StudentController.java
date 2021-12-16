@@ -84,7 +84,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Failure", response = ExceptionResponse.class)})
     @GetMapping(value = "/int/student/checkgraduate")
     @CrossOrigin
-    public String checkStudentCondition(@RequestHeader("AUTHORIZATION") String token) {
+    public boolean checkStudentCondition(@RequestHeader("AUTHORIZATION") String token) {
         return iStudentService.checkgraduateCondition(token);
     }
 

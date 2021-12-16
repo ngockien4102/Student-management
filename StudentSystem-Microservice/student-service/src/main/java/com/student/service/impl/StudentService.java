@@ -131,15 +131,15 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public String checkgraduateCondition(String token) throws ForbiddenException {
+    public boolean checkgraduateCondition(String token) throws ForbiddenException {
         String username = getUserName.getUsername(token);
         logger.info("===== receive student username {}, token to check graduate =====", username);
         if (checkRoleService.checkRole(token)) {
             List<String> bookBorrow = restTemplate.getBookBorrow(token);
             if (bookBorrow == null) {
-                return "this student can graduate";
+                return true;
             } else {
-                return "this student can't graduate";
+                return false;
             }
         } else {
             logger.error("this user don't have Permision to check");
@@ -154,7 +154,7 @@ public class StudentService implements IStudentService {
         logger.info("===== receive student username {}, token to get book borrow =====", username);
         if (checkRoleService.checkRole(token)) {
             List<String> bookBorrow = restTemplate.getBookBorrow(username);
-            return "Name: "+username+ " RollNumber: "+ studentEntity.getRollNumber()+" Book Borrow: "+bookBorrow.toString();
+            return bookBorrow.toString();
         } else {
             logger.error("this user don't have Permision to get");
             throw new ForbiddenException(new ExceptionResponse(ErrorCode.notPermision));

@@ -18,7 +18,7 @@ public interface IStudentService {
 
     List<StudentResponse> getListStudent(String token);
 
-    String checkgraduateCondition(String token);
+    boolean checkgraduateCondition(String token);
 
     String getBookBorrow( String token);
 
