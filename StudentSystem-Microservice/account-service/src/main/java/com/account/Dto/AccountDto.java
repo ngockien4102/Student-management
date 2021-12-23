@@ -18,17 +18,19 @@ public class AccountDto implements UserDetails {
 
 
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9]*$",message = "username must alpha numberic")
-    @Size(min = 6,max = 12,message = "username should between 6-12 characters")
+//    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "username must alpha numberic")
+//    @Size(min = 6, max = 12, message = "username should between 6-12 characters")
     private String username;
 
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9]*$",message = "password must alpha numberic")
-    @Size(min = 8,max = 16,message = "password should between 8-16 characters")
+//    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "password must alpha numberic")
+//    @Size(min = 8, max = 16, message = "password should between 8-16 characters")
     private String password;
-    @NotEmpty
-    @Pattern(regexp = "^(active)|(de active)$",message = "status  must active or deactive")
-    private String status;
+
+
+    //    @NotEmpty
+//    @Pattern(regexp = "^(active)|(de active)$", message = "status  must active or deactive")
+    private String status ;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

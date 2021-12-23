@@ -39,6 +39,7 @@ public class AccountService implements UserDetailsService {
     private RoleRepository roleRepository;
 
     public Account save(Account entity) {
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         return accountRepository.save(entity);
     }
 

@@ -86,7 +86,6 @@ public class AccountController {
             @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
             @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
     public LoginResponse login(HttpServletRequest request, @RequestBody AccountDto accountDto) throws ResourceBadRequestException {
-
         if (accountDto.getUsername() == null) {
             throw new ResourceBadRequestException(new BaseResponse(usernameEmpty, "must input username"));
         } else if (accountDto.getPassword() == null) {
@@ -122,7 +121,8 @@ public class AccountController {
             throw new ResourceBadRequestException(new BaseResponse(passwordEmpty, "must input password"));
         }
         Account postRequest = modelMapper.map(accountDto, Account.class);
-        Account account = accountService.save(postRequest);
+        postRequest.setStatus("ACTIVE");
+        Account account = accountService.saveUser(postRequest);
         // convert entity to DTO
         AccountDto postResponse = modelMapper.map(account, AccountDto.class);
 
@@ -131,7 +131,7 @@ public class AccountController {
 
     // Update account
     // http://localhost:8091/accounts/{id}
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
             @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
             @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
