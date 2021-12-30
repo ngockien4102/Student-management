@@ -12,22 +12,22 @@ import java.util.Collections;
 
 @Data
 @AllArgsConstructor
-public class CustomUserDetails implements UserDetails {
-    Account user;
+public class CustomAccountDetails implements UserDetails {
+    Account account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        return Collections.singleton(new SimpleGrantedAuthority(account.getRoles().toString()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return account.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return account.getUsername();
     }
 
     @Override

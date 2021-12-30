@@ -1,12 +1,17 @@
 package com.example.spring.security.basic.jwt;
 
-import com.example.spring.security.basic.User.CustomUserDetails;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.example.spring.security.basic.User.CustomAccountDetails;
 import io.jsonwebtoken.*;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -18,16 +23,24 @@ public class JwtTokenProvider {
     private final long JWT_EXPIRATION = 604800000L;
 
     // Tạo ra jwt từ thông tin user
-    public String generateToken(CustomUserDetails userDetails) {
+    public String generateToken(CustomAccountDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+
         // Tạo chuỗi json web token từ id của user.
-        return Jwts.builder()
-                .setSubject(userDetails.getUser().getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
-                .compact();
+        String access_token = JWT.create()
+                .withSubject(userDetails.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(Algorithm.HMAC256("secret".getBytes()));
+//        return Jwts.builder()
+//                .setSubject(userDetails.getAccount().getUsername())
+//                .setIssuedAt(now)
+//                .setExpiration(expiryDate)
+//                .setClaims("roles", Arrays.stream(userDetails.getAuthorities().stream().toArray()).map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+//                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
+//                .compact();
+        return access_token;
     }
 
     // Lấy thông tin user từ jwt

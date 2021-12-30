@@ -1,6 +1,6 @@
 package com.example.spring.security.basic.service;
 
-import com.example.spring.security.basic.User.CustomUserDetails;
+import com.example.spring.security.basic.User.CustomAccountDetails;
 import com.example.spring.security.basic.dto.Request.AccountRequest;
 import com.example.spring.security.basic.dto.Request.RoleRequest;
 import com.example.spring.security.basic.dto.Response.AccountResponse;
@@ -31,7 +31,7 @@ public class AccountService implements UserDetailsService {
         if (user == null) {
             throw new RuntimeException("not found user " + username);
         }
-        return new CustomUserDetails(user);
+        return new CustomAccountDetails(user);
     }
 
 

@@ -1,13 +1,12 @@
 package com.example.spring.security.basic.controller;
 
-import com.example.spring.security.basic.User.CustomUserDetails;
+import com.example.spring.security.basic.User.CustomAccountDetails;
 import com.example.spring.security.basic.dto.Request.AccountRequest;
 import com.example.spring.security.basic.dto.Request.AddRoleRequest;
 import com.example.spring.security.basic.dto.Request.LoginRequest;
 import com.example.spring.security.basic.dto.Request.RoleRequest;
 import com.example.spring.security.basic.dto.Response.AccountResponse;
 import com.example.spring.security.basic.dto.Response.LoginResponse;
-import com.example.spring.security.basic.entity.Roles;
 import com.example.spring.security.basic.exception.ResourceBadRequestException;
 import com.example.spring.security.basic.exception.ResourceNotFoundException;
 import com.example.spring.security.basic.jwt.JwtTokenProvider;
@@ -52,7 +51,7 @@ public class AccountController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Trả về jwt cho người dùng.
-        String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+        String jwt = tokenProvider.generateToken((CustomAccountDetails) authentication.getPrincipal());
         return new LoginResponse(jwt);
     }
 
@@ -60,6 +59,7 @@ public class AccountController {
 
     // get detail account
     // http://localhost:8091/accounts/{id}
+    @CrossOrigin
     @GetMapping("/{id}")
 //    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = AccountDto.class),
 //            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
@@ -75,6 +75,7 @@ public class AccountController {
 
     // Create account
     // http://localhost:8091/accounts
+    @CrossOrigin
     @PostMapping("/create")
 //    @ApiResponses(value = {@ApiResponse(code = 200, message = "Add success", response = AccountDto.class),
 //            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
@@ -94,6 +95,7 @@ public class AccountController {
 
     // Update account
     // http://localhost:8091/accounts/{id}
+    @CrossOrigin
     @PutMapping("/{id}")
 //    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
 //            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
@@ -117,6 +119,7 @@ public class AccountController {
 
     // create role(ex:,ROLE_ADMIN,ROLE_USER,ROLE_MANAGE,ROLE_PARENT,...)
     // http://localhost:8091/accounts/role/save
+    @CrossOrigin
     @PostMapping("/role/save")
 //    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
 //            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
@@ -130,6 +133,7 @@ public class AccountController {
 
     // add role to User
     // http://localhost:8091/accounts/role/addtoaccounts
+    @CrossOrigin
     @PostMapping("/role/addtoaccounts")
 //    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
 //            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
