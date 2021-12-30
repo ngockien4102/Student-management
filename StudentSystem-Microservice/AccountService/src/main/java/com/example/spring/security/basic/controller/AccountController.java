@@ -58,17 +58,12 @@ public class AccountController {
     // Api /api/random yêu cầu phải xác thực mới có thể request
 
     // get detail account
-    // http://localhost:8091/accounts/{id}
+    // http://localhost:8091/accounts/{username}
     @CrossOrigin
-    @GetMapping("/{id}")
-//    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = AccountDto.class),
-//            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
-//            @ApiResponse(code = 401, message = "Unauthorized", response = BaseResponse.class),
-//            @ApiResponse(code = 403, message = "Forbidden", response = BaseResponse.class),
-//            @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
+    @GetMapping("/{username}")
 
-    public ResponseEntity<AccountResponse> getAccountById(@Valid @PathVariable(name = "id") Long id) throws ResourceNotFoundException {
-        AccountResponse accountResponse = accountService.getAccountbyId(id);
+    public ResponseEntity<AccountResponse> getAccountById(@Valid @PathVariable(name = "username") String username) throws ResourceNotFoundException {
+        AccountResponse accountResponse = accountService.getAccountbyUsername(username);
         return ResponseEntity.ok().body(accountResponse);
     }
 
@@ -77,17 +72,7 @@ public class AccountController {
     // http://localhost:8091/accounts
     @CrossOrigin
     @PostMapping("/create")
-//    @ApiResponses(value = {@ApiResponse(code = 200, message = "Add success", response = AccountDto.class),
-//            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
-//            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
-//            @ApiResponse(code = 403, message = "Forbidden", response = BaseResponse.class),
-//            @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
     public ResponseEntity<AccountRequest> createAccount(@Valid @RequestBody AccountRequest accountRequest) throws ResourceBadRequestException {
-        // convert DTO to entity
-//        Account postRequest = modelMapper.map(accountDto, Account.class);
-//        Account account = accountService.saveUser(postRequest);
-//        // convert entity to DTO
-//        AccountDto postResponse = modelMapper.map(account, AccountDto.class);
         AccountRequest accountResponse = accountService.createAccount(accountRequest);
         return new ResponseEntity<AccountRequest>(accountResponse, HttpStatus.CREATED);
     }
@@ -97,21 +82,8 @@ public class AccountController {
     // http://localhost:8091/accounts/{id}
     @CrossOrigin
     @PutMapping("/{id}")
-//    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
-//            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
-//            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
-//            @ApiResponse(code = 403, message = "Forbidden", response = BaseResponse.class),
-//            @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
     public ResponseEntity<AccountRequest> updateAccount(@Valid @PathVariable(name = "id") Long id, @RequestBody AccountRequest accountRequest)
             throws ResourceNotFoundException, ResourceBadRequestException {
-        // convert DTO to Entity
-//        Account accountRequest = accountService.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException(new BaseResponse(notFound, "Not found for this id")));
-//        accountRequest = modelMapper.map(accountDto, Account.class);
-//        Account account = accountService.saveUser(accountRequest);
-//
-//        // entity to DTO
-//        AccountDto accountResponse = modelMapper.map(account, AccountDto.class);
         accountService.updateAccount(id, accountRequest);
         return ResponseEntity.ok().body(accountRequest);
     }
@@ -121,11 +93,6 @@ public class AccountController {
     // http://localhost:8091/accounts/role/save
     @CrossOrigin
     @PostMapping("/role/save")
-//    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
-//            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
-//            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
-//            @ApiResponse(code = 403, message = "Forbidden", response = BaseResponse.class),
-//            @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
     public ResponseEntity<RoleRequest> saveRole(@Valid @RequestBody RoleRequest role) {
         return new ResponseEntity<RoleRequest>(accountService.saveRole(role), HttpStatus.CREATED);
     }
@@ -135,11 +102,6 @@ public class AccountController {
     // http://localhost:8091/accounts/role/addtoaccounts
     @CrossOrigin
     @PostMapping("/role/addtoaccounts")
-//    @ApiResponses(value = {@ApiResponse(code = 200, message = "Update success", response = AccountDto.class),
-//            @ApiResponse(code = 401, message = "Unauthorization", response = BaseResponse.class),
-//            @ApiResponse(code = 400, message = "Bad Request", response = BaseResponse.class),
-//            @ApiResponse(code = 403, message = "Forbidden", response = BaseResponse.class),
-//            @ApiResponse(code = 500, message = "Failure", response = BaseResponse.class)})
     public ResponseEntity<?> addRoleToUser(@Valid @RequestBody AddRoleRequest form) {
         accountService.addRoleToUser(form.getUsername(), form.getRoleName());
         return ResponseEntity.ok().build();

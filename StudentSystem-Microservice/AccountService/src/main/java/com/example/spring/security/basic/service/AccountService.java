@@ -35,8 +35,8 @@ public class AccountService implements UserDetailsService {
     }
 
 
-    public AccountResponse getAccountbyId(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
+    public AccountResponse getAccountbyUsername(String username) {
+        Account account = accountRepository.findByUsername(username);
         AccountResponse accountResponse = new AccountResponse();
         accountResponse.setPassword(account.getPassword());
         accountResponse.setUsername(account.getUsername());
